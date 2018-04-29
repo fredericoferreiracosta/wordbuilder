@@ -9,7 +9,7 @@ public class Runner {
     public static void main(String args[])
     {
         final int WORD_SIZE = 5;
-        final String DB_NAME = "brainextension";
+        final String DB_NAME = "wordbuilder";
         MongoClient mongoClient;
         Date startTime = new Date();
 
