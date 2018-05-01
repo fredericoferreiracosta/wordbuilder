@@ -53,17 +53,22 @@ public class WordBuilder
     {
         final int CURRENT_SIZE = LAST_SIZE + 1;
         DBObject query = new BasicDBObject().append(SIZE_KEY, LAST_SIZE);
-        List<DBObject> currentSet = dictionary.find(query).addOption(Bytes.QUERYOPTION_NOTIMEOUT).limit(PAGINATION_LIMIT).toArray();
-        for (DBObject currentWord : currentSet)
+        long amount = dictionary.count(query);
+        long pages = amount / PAGINATION_LIMIT;
+        for (int a = 0; a <= Math.round(pages); a++)
         {
-            for (int j = 0; j < alphabet.size(); j++)
+            List<DBObject> currentSet = dictionary.find(query).addOption(Bytes.QUERYOPTION_NOTIMEOUT).skip(a * PAGINATION_LIMIT).limit(PAGINATION_LIMIT).toArray();
+            for (DBObject currentWord : currentSet)
             {
-                String newCombination = currentWord.get(WORD_KEY) + alphabet.get(j);
-                DBObject newWord = new BasicDBObject()
-                        .append(SIZE_KEY, CURRENT_SIZE)
-                        .append(WORD_KEY, newCombination);
-                dictionary.insert(newWord);
-                System.out.println(newCombination);
+                for (int j = 0; j < alphabet.size(); j++)
+                {
+                    String newCombination = currentWord.get(WORD_KEY) + alphabet.get(j);
+                    DBObject newWord = new BasicDBObject()
+                            .append(SIZE_KEY, CURRENT_SIZE)
+                            .append(WORD_KEY, newCombination);
+                    dictionary.insert(newWord);
+                    System.out.println(newCombination);
+                }
             }
         }
     }
